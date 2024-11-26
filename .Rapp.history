@@ -1,0 +1,869 @@
+str(pca1)
+pca1$CA
+?biplot
+pca1$CA$v
+plot(pca1)
+biplot(pca1)
+thing <- biplot(pca1)
+str(thing)
+pca1$Ybar
+?rda
+scores(rda)
+scores(pca1)
+pca1$CA$u[1:10,]
+biplot.rda
+biplot
+scores
+punt1
+punt1[1:10,]
+punt1$sites[1:10,]
+plot(punt1$sites)
+points(pca1$CA$u[,1:2])
+plot(punt1$sites)
+points(scale(pca1$CA$u[,1:2]))
+biplot(pca1)
+points(scale(pca1$CA$u[,1:2]))
+biplot(pca1)
+thing
+thing <- biplot(pca1)
+str(thing)
+scores(pca1)
+str(scores(pca1))
+?biplot
+ggplot(punt1$sites,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red')
+biplot(pca1)
+ggplot(punt1$sites,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red')
+?geom_segment
+ggplot(punt1$sites,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red') + #
+	geom_segment(data=punt1$species,arrow=arrow())
+?geom_segment
+punt1$species
+ggplot(punt1$sites,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red') + #
+	geom_segment(data=punt1$species,#
+				 aes(x=0,y=0,xend=PC1,yend=PC2),#
+				 arrow=arrow())
+ggplot(sites1,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red') + #
+	geom_segment(data=species1,#
+				 aes(x=0,y=0,xend=PC1,yend=PC2),#
+				 arrow=arrow()) +#
+	annotate('text',x=species1[,1],y=species1[,2],label=rownames(species1))
+pca1     <- rda(iris[,-5])  # pca of iris data#
+pca2     <- rda(iris[,-5],scale=TRUE)#
+#
+punt1    <- scores(pca1)#
+punt2    <- scores(pca2)#
+#
+sites1   <- punt1$sites#
+sites2   <- punt2$sites#
+#
+species1 <- punt1$species#
+species2 <- punt2$species
+ggplot(sites1,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red') + #
+	geom_segment(data=species1,#
+				 aes(x=0,y=0,xend=PC1,yend=PC2),#
+				 arrow=arrow()) +#
+	annotate('text',x=species1[,1],y=species1[,2],label=rownames(species1))
+ggplot(sites1,aes(x=PC1,y=PC2)) +#
+	geom_point(color='red') + #
+	geom_segment(data=species1,#
+				 aes(x=0,y=0,xend=PC1,yend=PC2),#
+				 arrow=arrow(),#
+				 color='blue') +#
+	annotate('text',#
+			 x=species1[,1],#
+			 y=species1[,2],#
+			 label=rownames(species1))
+plot1 <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1))
+plot1
+plot1 <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1)) +#
+			 labs(title='Principal Component Analysis')#
+plot1
+?ggarrange()
+?ggarrange
+??ggarrange
+library(vegan)#
+library(ggplot2)#
+library(ggpubr)
+??ggarrange
+install.packages(ggpubr)
+install.packages('ggpubr')
+library(vegan)#
+library(ggplot2)#
+library(ggpubr)
+?rda()
+plot1 <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1)) +#
+			 labs(title='PCA, raw data')#
+plot2 <- ggplot(sites2,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species2,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species2[,1],#
+			 		  y=species2[,2],#
+			 		  label=rownames(species2)) +#
+			 labs(title='PCA, scaled data to variance=1')#
+figure <- ggarrange(plot1,plot2,labels=c('a)','b)'),ncol=2,nrow=1)#
+figure
+plot1 <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1)) +#
+			 labs(title='PCA, raw data')#
+plot2 <- ggplot(sites2,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species2,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species2[,1],#
+			 		  y=species2[,2],#
+			 		  label=rownames(species2)) +#
+			 labs(title='PCA, scaled data to variance=1')#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+plot1 <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1)) +#
+			 labs(title='PCA, raw data')#
+plot2 <- ggplot(sites2,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species2,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species2[,1],#
+			 		  y=species2[,2],#
+			 		  label=rownames(species2)) +#
+			 labs(title='PCA, scaled data to unit variance')#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+plotpca <- function(sites,species) {#
+	plotf <- ggplot(sites1,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species1,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species1[,1],#
+			 		  y=species1[,2],#
+			 		  label=rownames(species1)) +#
+			 labs(title='Principal Component Analysis')#
+	return (plotf)#
+}
+plot1 <- plotpca(sites1,species1)#
+plot1
+plot1 <- plotpca(sites1,species1)#
+plot2 <- plotpca(sites2,species2)#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+plotpca <- function(sites,species) {#
+	plotf <- ggplot(sites,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species[,1],#
+			 		  y=species[,2],#
+			 		  label=rownames(species)) +#
+			 labs(title='Principal Component Analysis')#
+	return (plotf)#
+}
+plot1 <- plotpca(sites1,species1)#
+plot1
+plot1 <- plotpca(sites1,species1)#
+plot2 <- plotpca(sites2,species2)#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+plotpca <- function(sites,species) {#
+	plotf <- ggplot(sites,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='red') + #
+			 geom_segment(data=species,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='blue') + #
+			 annotate('text',#
+			 		  x=species[,1],#
+			 		  y=species[,2],#
+			 		  label=rownames(species))#
+	return (plotf)#
+}
+plot1 <- plotpca(sites1,species1) + labs(title='Principal Component Analysis')#
+plot1
+plot1 <- plotpca(sites1,species1) + labs(title='PCA, original data')#
+plot2 <- plotpca(sites2,species2) + labs(title='PCA, data scaled to unit variance')#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+super <- read.delim('./stats-data/superficiales')
+super <- read.delim('./stats-data/superficiales.csv')
+super <- read.delim('~/stats-data/superficiales.csv')
+super <- read.delim('~/Documents/barroso-stats/stats-data/superficiales.csv')
+head(super)
+super <- read.csv('~/Documents/barroso-stats/stats-data/superficiales.csv')
+head(super)
+unique(super$sector)
+dim(super)
+super
+super <- read.csv('~/Documents/barroso-stats/stats-data/superficiales.csv')#
+#
+pca3     <- rda(super[,3:13])#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+pca3     <- rda(super[,4:13])#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+pca3     <- rda(super[,5:13])#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+pca3     <- rda(super[,5:13],scale=T)#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+pca3     <- rda(super[,3:13],scale=T)#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+plotpca <- function(sites,species) {#
+	plotf <- ggplot(sites,aes(x=PC1,y=PC2)) + #
+			 geom_point(color='black') + #
+			 geom_segment(data=species,#
+			 			  aes(x=0,y=0,xend=PC1,yend=PC2),#
+			 			  arrow=arrow(),#
+			 			  color='red') + #
+			 annotate('text',#
+			 		  x=species[,1],#
+			 		  y=species[,2],#
+			 		  label=rownames(species),color='blue')#
+	return (plotf)#
+}
+plot1 <- plotpca(sites1,species1) + labs(title='Principal Component Analysis')#
+plot1
+plot1 <- plotpca(sites1,species1) + labs(title='PCA, original data')#
+plot2 <- plotpca(sites2,species2) + labs(title='PCA, data scaled to unit variance')#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+super <- read.csv('~/Documents/barroso-stats/stats-data/superficiales.csv')#
+#
+pca3     <- rda(super[,3:13],scale=T)#
+punt3    <- scores(pca3)#
+sites3   <- punt3$sites#
+species3 <- punt3$species#
+#
+plotpca(sites3,species3)
+plot1 <- plotpca(sites1,species1) + labs(title='PCA, original data')#
+plot2 <- plotpca(sites2,species2) + labs(title='PCA, data scaled to unit variance')#
+figure <- ggarrange(plot1,plot2,ncol=2,nrow=1)#
+figure
+library(jsonlite)
+library(nparcomp)
+hvsrtodo <- read_json('/Users/roberto/Documents/barroso-stats/hvsr_colima_24h.json')
+dias <- hvsrtodo$day[1:352]
+frecs <- hvsrtodo$day[1:352]
+dias[182]
+dias[183]
+dias_pre[183]
+dias_pre <- dias[183:]
+dias_pre <- dias[1:182]
+dias_post <- dias[183:352]
+frecs_pre <- frecs[1:182]
+frecs_post <- frecs[183:352]
+dias
+dias <- as.numeric(hvsrtodo$day[1:352])
+frecs <- as.numeric(hvsrtodo$day[1:352])
+dias_pre <- dias[1:182]
+dias_post <- dias[183:352]
+frecs_pre <- frecs[1:182]
+frecs_post <- frecs[183:352]
+dias_pre
+dias_post
+dias_pre <- dias[1:181]
+dias_post <- dias[182:352]
+frecs_pre <- frecs[1:181]
+frecs_post <- frecs[182:352]
+dens_pre <- density(frecs_pre)
+dens_post <- density(frecs_pre)
+dens_post <- density(frecs_post)
+plot(d,lwd=2)
+plot(dens_pre,lwd=2)
+line(dens_post)
+lines(dens_post)
+frecs_pre
+frecs <- as.numeric(hvsrtodo$f0_freq_bis[1:352])
+frecs_pre <- frecs[1:181]
+frecs_post <- frecs[182:352]
+dens_pre <- density(frecs_pre)
+dens_post <- density(frecs_post)
+plot(dens_pre,lwd=2)
+lines(dens_post)
+dens_pre
+str(dens_pre)
+df <- (dens_pre$x,dens_pre$y,dens_post$x,dens_post$y)
+df <- data.frame(dens_pre$x,dens_pre$y,dens_post$x,dens_post$y)
+df
+head(df)
+df <- data.frame(fpre=dens_pre$x,dpre=dens_pre$y,fpost=dens_post$x,dpost=dens_post$y)
+head(df)
+write_csv(df,'/Users/roberto/Documents/barroso-stats/hvsrdensitykernels.csv')
+write.csv(df,'/Users/roberto/Documents/barroso-stats/hvsrdensitykernels.csv')
+plot(dens_pre,lwd=2)
+lines(dens_post)
+wilcox.test(frecs_pre,frecs_post)
+w <- wilcox.test(frecs_pre,frecs_post)
+str(w)
+w$p.value
+dir()
+library(geodata)#
+library(ggplot2)
+setwd('/Users/roberto/Documents/stats-final-project')#
+#
+library(geodata)#
+library(ggplot2)
+dir()
+sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4)
+sismos
+head(sismos)
+head(sismos,n=10L)
+# Reemplazar path por el preferido#
+setwd('/Users/roberto/Documents/stats-final-project')#
+#
+library(geodata)#
+library(ggplot2)#
+library(sf)#
+sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
+          filter(magnitud!='no calculable')
+setwd('/Users/roberto/Documents/stats-final-project')#
+#
+library(geodata)#
+library(ggplot2)#
+library(sf)#
+library(dplyr)#
+sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
+          filter(magnitud!='no calculable')
+sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
+          filter(Magnitud!='no calculable')
+length(sismos)
+length(sismos[,1])
+tail(sismos)
+tail(sismos,n=10L)
+sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4)
+tail(sismos,n=10L)
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782)] %>%#
+          filter(Magnitud!='no calculable')
+tail(sismos)
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782)] %>%#
+          filter(Magnitud!=c('no calculable',''))
+tail(sismos)
+sismos <- read.csv("catalogo_sismos.csv",skip=4) %>%#
+          filter(Magnitud!=c('no calculable',''))
+tail(sismos)
+sismos <- read.csv("catalogo_sismos.csv",skip=4) %>%#
+          filter(Magnitud!=c('no calculable',''))
+tail(sismos)
+sismos <- read.csv("catalogo_sismos.csv",skip=4)
+tail(sismos)
+tail(sismos,n=10L)
+sismos <- sismos[-(294776:294782)]
+tail(sismos,n=10L)
+sismos <- sismos[-(294776:294782),]
+tail(sismos,n=10L)
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),]
+tail(sismos,n=10L)
+?strptime
+??as.POSIXct
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
+              strptime('%Y-%m-%d %H:%M:%S') %>%#
+              as.POSIXct(tz = 'UTC')
+head(sismos)
+str(sismos)
+tail(sismos)
+?st_as_sf
+magmap1 <- ggplot() +#
+           geom_sf(mexico,fill='white',color='grey') +#
+           geom_sf(ev_pts,size=0.3,alpha=0.2,color='black')#
+magmap1
+mexico <- gdam(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:4326'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
+library(geodata)#
+library(ggplot2)#
+library(sf)#
+library(dplyr)
+mexico <- gdam(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:4326'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:4326'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
+magmap1 <- ggplot() +#
+           geom_sf(mexico,fill='white',color='grey') +#
+           geom_sf(ev_pts,size=0.3,alpha=0.2,color='black')#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black')#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=c(-120,80),ylim=c(14,32))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=c(-120,-80),ylim=c(14,32))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=c(-120,-80),ylim=c(12,34))#
+magmap1
+?min()
+max(sismos$Latitud)
+min(sismos$Latitud)
+max(sismos$Longiutd)
+max(sismos$Longitud)
+min(sismos$Longitud)
+summary(sismos$Longitud)
+str(summary(sismos$Longitud))
+plims <- function(x,p=0.1) {#
+	# limits of plot axis#
+	# x - numeric#
+	# p - percentage (from 0 to 1) of padding#
+	maxval <- max(x)#
+	minval <- min(x)#
+	span   <- maxval-minval#
+	lim_hi <- maxval + 0.5 * p * span#
+	lim_lo <- minval - 0.5 * p * span#
+	return c(lim_lo,lim_hi)#
+}
+plims <- function(x,p=0.1) {#
+	# limits of plot axis#
+	# x - numeric#
+	# p - percentage (from 0 to 1) of padding#
+	maxval <- max(x)#
+	minval <- min(x)#
+	span   <- maxval-minval#
+	lim_hi <- maxval + 0.5 * p * span#
+	lim_lo <- minval - 0.5 * p * span#
+	return (c(lim_lo,lim_hi))#
+}
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud),ylim=plims(sismos$Latitud))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=0.05),ylim=plims(sismos$Latitud,p=0.05))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=0),ylim=plims(sismos$Latitud,p=0))#
+magmap1
+bckgnd <- do.apply('bind',lapply(bckgnd_countries,#
+                   function(x) gadm(country=x,level=0,resolution=2,#
+                   path=getwd())))
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.apply('bind',lapply(bckgnd_countries,#
+                   function(x) gadm(country=x,level=0,resolution=2,#
+                   path=getwd())))
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('bind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd())))
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd())))
+bckgnd
+str(bckgnd)
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:4326'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:4326'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:4326'))
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey')#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=0),#
+                    ylim=plims(sismos$Latitud,p=0))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=0),#
+                    ylim=plims(sismos$Latitud,p=0))#
+magmap1
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:6365'))#
+#
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=0),#
+                    ylim=plims(sismos$Latitud,p=0))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,size=Magnitud,alpha=0.2,color=Profundidad) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=Magnitud,color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+length(sismos[,1])
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),] %>%#
+          filter(Magnitud != 'no calculable')
+length(sismos[,1])
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
+              strptime('%Y-%m-%d %H:%M:%S') %>%#
+              as.POSIXct(tz = 'UTC')
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:6365'))#
+#
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=Magnitud,color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magsize <- function(mag) {#
+	# for plot#
+	# mag - list of magnitudes#
+	if (mag <= 2) {#
+		return (1)#
+	}#
+	else if (mag <= 4) {#
+		return (2)#
+	}#
+	else if (mag <= 6) {#
+		return (3)#
+	}#
+	else {#
+		return (4)#
+	}#
+}
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magsize <- function(x) {#
+	# for plot#
+	# x - list of magnitudes#
+	mags = 1:length(x)#
+	for (i in 1:length(x)) {#
+		mag = x[i]#
+		if (mag <= 2) {#
+			mags[i] = 1#
+		}#
+		else if (mag <= 4) {#
+			mags[i] = 2#
+		}#
+		else if (mag <= 6) {#
+			mags[i] = 3#
+		}#
+		else {#
+			mags[i] = 4#
+		}		#
+	}#
+	return (mags)#
+}
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magsize <- function(x) {#
+	# for plot#
+	# x - list of magnitudes#
+	mags = 1:length(x)#
+	for (i in 1:length(x)) {#
+		mag = x[i]#
+		if (mag <= 3) {#
+			mags[i] = 1#
+		}#
+		else if (mag <= 5) {#
+			mags[i] = 2#
+		}#
+		else if (mag <= 7) {#
+			mags[i] = 3#
+		}#
+		else {#
+			mags[i] = 4#
+		}		#
+	}#
+	return (mags)#
+}
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+           scale_colour_gradientn(colors='viridis')#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           scale_colour_gradientn(colors='viridis') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           scale_colour_gradient(colors='viridis') +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           scale_colour_gradient() +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+magmap1
+rlang::last_trace()
+rlang::last_trace(drop=FALSE)
+# Reemplazar path por el preferido#
+setwd('/Users/roberto/Documents/stats-final-project')#
+#
+library(geodata)#
+library(ggplot2)#
+library(sf)#
+library(dplyr)#
+#
+######### ######### ######### ######### ######### ######### ######### ######### #
+#
+# Definiciones de funciones#
+#
+plims <- function(x,p=0.1) {#
+	# limits of plot axis#
+	# x - numeric#
+	# p - percentage (from 0 to 1) of padding#
+	maxval <- max(x)#
+	minval <- min(x)#
+	span   <- maxval-minval#
+	lim_hi <- maxval + 0.5 * p * span#
+	lim_lo <- minval - 0.5 * p * span#
+	return (c(lim_lo,lim_hi))#
+}#
+#
+magsize <- function(x) {#
+	# for plot#
+	# x - list of magnitudes#
+	mags = 1:length(x)#
+	for (i in 1:length(x)) {#
+		mag = x[i]#
+		if (mag <= 3) {#
+			mags[i] = 1#
+		}#
+		else if (mag <= 5) {#
+			mags[i] = 2#
+		}#
+		else if (mag <= 7) {#
+			mags[i] = 3#
+		}#
+		else {#
+			mags[i] = 4#
+		}		#
+	}#
+	return (mags)#
+}#
+#
+######### ######### ######### ######### ######### ######### ######### ######### #
+#
+######### ######### ######### ######### ######### ######### ######### ######### #
+#
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),] %>%#
+          filter(Magnitud != 'no calculable')#
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
+              strptime('%Y-%m-%d %H:%M:%S') %>%#
+              as.POSIXct(tz = 'UTC')#
+#
+######### ######### ######### ######### ######### ######### ######### ##########
+#
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:6365'))#
+#
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+magmap1
+magmap1 <- ggplot() +
+geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+geom_sf(data=mexico,fill='white',color='grey') +
+geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=magsize(Magnitud),color=Profundidad)) +
+coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1))
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(size=1,color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,size=0.1#
+                   aes(color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
+magmap1
+magmap1 <- ggplot() +#
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
+           geom_sf(data=mexico,fill='white',color='grey') +#
+           geom_sf(data=ev_pts,alpha=0.2,#
+                   aes(color=Profundidad)) +#
+           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
+magmap1
