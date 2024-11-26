@@ -86,16 +86,6 @@ sismos_mc_hi <- sismos[mc_bool,]   # complete for older data
 
 
 
-# Helpful figure for determining magnitude of completeness
-freqs <- magfreqs(sismos$Magnitud)
-magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +
-                geom_point() +
-                scale_y_continuous(trans='log10',
-                    breaks=trans_breaks('log10', function(x) 10^x),
-                    labels=trans_format('log10', math_format(10^.x)))
-magfreqplot1
-
-
 ######### ######### ######### ######### ######### ######### ######### #########
 
 bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')
