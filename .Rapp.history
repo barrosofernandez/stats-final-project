@@ -1,3 +1,59 @@
+?write.csv
+head(oxxo_base[with(oxxo_base, order(entidad,municipio)),])
+head(oxxo_base[with(oxxo_base, order(entidad,municipio)),c(28:33,40,41)])
+oxxo <- oxxo_base[with(oxxo_base, order(entidad,municipio)),c(28:33,40,41)]
+head(oxxo)
+rownames(oxxo) <- NULL
+head(oxxo)
+tail(oxxo)
+write.csv(oxxo,'/Volumes/ADATA HD/2024-30daymapchallenge/03-polygons/csv/oxxos.csv')
+install.packages('vegan')
+library(vegan)#
+#
+pca1 <- rda(iris[,-5])  # pca of iris data#
+pca2 <- rda(iris[,-5],scale=TRUE)#
+#
+punt1 <- scores(pca1)#
+punt2 <- scores(pca2)
+?biplot(())
+?biplot
+pca1
+summary(pca1)
+str(pca1)
+?rda
+pca1$Ybar
+pca1
+summary(pca1)
+str(pca1)
+pca1$u
+pca1$CA
+pca1$CA$u
+ggplot(pca1$CA$u[,1:2],aes(x=PC1,y=PC2)) +#
+	geompoint(color='red')
+library(vegan)#
+library(ggplot2)
+pca1 <- rda(iris[,-5])  # pca of iris data#
+pca2 <- rda(iris[,-5],scale=TRUE)#
+#
+punt1 <- scores(pca1)#
+punt2 <- scores(pca2)#
+#
+ggplot(pca1$CA$u[,1:2],aes(x=PC1,y=PC2)) +#
+	geompoint(color='red')
+ggplot(pca1$CA$u[,1:2],aes(x=PC1,y=PC2)) +#
+	geom_point(color='red')
+str(pca1)
+pca1$CA$v
+punt1
+pca1$CA$v
+str(pca1)
+?rda
+?score
+?scores
+plot(pca1)
+pca1$colsum
+pca1$Ybar
+plot(pca1)
 str(pca1)
 pca1$CA
 ?biplot
@@ -376,131 +432,12 @@ wilcox.test(frecs_pre,frecs_post)
 w <- wilcox.test(frecs_pre,frecs_post)
 str(w)
 w$p.value
-dir()
-library(geodata)#
-library(ggplot2)
 setwd('/Users/roberto/Documents/stats-final-project')#
 #
-library(geodata)#
-library(ggplot2)
-dir()
-sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4)
-sismos
-head(sismos)
-head(sismos,n=10L)
-# Reemplazar path por el preferido#
-setwd('/Users/roberto/Documents/stats-final-project')#
-#
-library(geodata)#
-library(ggplot2)#
-library(sf)#
-sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
-          filter(magnitud!='no calculable')
-setwd('/Users/roberto/Documents/stats-final-project')#
-#
-library(geodata)#
-library(ggplot2)#
-library(sf)#
-library(dplyr)#
-sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
-          filter(magnitud!='no calculable')
-sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4) %>%#
-          filter(Magnitud!='no calculable')
-length(sismos)
-length(sismos[,1])
-tail(sismos)
-tail(sismos,n=10L)
-sismos <- read.csv("SSNMX_catalogo_19730101_20231231.csv",skip=4)
-tail(sismos,n=10L)
-sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782)] %>%#
-          filter(Magnitud!='no calculable')
-tail(sismos)
-sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782)] %>%#
-          filter(Magnitud!=c('no calculable',''))
-tail(sismos)
-sismos <- read.csv("catalogo_sismos.csv",skip=4) %>%#
-          filter(Magnitud!=c('no calculable',''))
-tail(sismos)
-sismos <- read.csv("catalogo_sismos.csv",skip=4) %>%#
-          filter(Magnitud!=c('no calculable',''))
-tail(sismos)
-sismos <- read.csv("catalogo_sismos.csv",skip=4)
-tail(sismos)
-tail(sismos,n=10L)
-sismos <- sismos[-(294776:294782)]
-tail(sismos,n=10L)
-sismos <- sismos[-(294776:294782),]
-tail(sismos,n=10L)
-sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),]
-tail(sismos,n=10L)
-?strptime
-??as.POSIXct
-sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
-              strptime('%Y-%m-%d %H:%M:%S') %>%#
-              as.POSIXct(tz = 'UTC')
-head(sismos)
-str(sismos)
-tail(sismos)
-?st_as_sf
-magmap1 <- ggplot() +#
-           geom_sf(mexico,fill='white',color='grey') +#
-           geom_sf(ev_pts,size=0.3,alpha=0.2,color='black')#
-magmap1
-mexico <- gdam(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:4326'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
 library(geodata)#
 library(ggplot2)#
 library(sf)#
 library(dplyr)
-mexico <- gdam(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:4326'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
-mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:4326'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), crs=st_crs('EPSG:4326'))
-magmap1 <- ggplot() +#
-           geom_sf(mexico,fill='white',color='grey') +#
-           geom_sf(ev_pts,size=0.3,alpha=0.2,color='black')#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black')#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=c(-120,80),ylim=c(14,32))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=c(-120,-80),ylim=c(14,32))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=c(-120,-80),ylim=c(12,34))#
-magmap1
-?min()
-max(sismos$Latitud)
-min(sismos$Latitud)
-max(sismos$Longiutd)
-max(sismos$Longitud)
-min(sismos$Longitud)
-summary(sismos$Longitud)
-str(summary(sismos$Longitud))
-plims <- function(x,p=0.1) {#
-	# limits of plot axis#
-	# x - numeric#
-	# p - percentage (from 0 to 1) of padding#
-	maxval <- max(x)#
-	minval <- min(x)#
-	span   <- maxval-minval#
-	lim_hi <- maxval + 0.5 * p * span#
-	lim_lo <- minval - 0.5 * p * span#
-	return c(lim_lo,lim_hi)#
-}
 plims <- function(x,p=0.1) {#
 	# limits of plot axis#
 	# x - numeric#
@@ -511,179 +448,8 @@ plims <- function(x,p=0.1) {#
 	lim_hi <- maxval + 0.5 * p * span#
 	lim_lo <- minval - 0.5 * p * span#
 	return (c(lim_lo,lim_hi))#
-}
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud),ylim=plims(sismos$Latitud))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=0.05),ylim=plims(sismos$Latitud,p=0.05))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=0),ylim=plims(sismos$Latitud,p=0))#
-magmap1
-bckgnd <- do.apply('bind',lapply(bckgnd_countries,#
-                   function(x) gadm(country=x,level=0,resolution=2,#
-                   path=getwd())))
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.apply('bind',lapply(bckgnd_countries,#
-                   function(x) gadm(country=x,level=0,resolution=2,#
-                   path=getwd())))
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.call('bind',lapply(bckgnd_countries,#
-                  function(x) gadm(country=x,level=0,resolution=2,#
-                  path=getwd())))
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
-                  function(x) gadm(country=x,level=0,resolution=2,#
-                  path=getwd())))
-bckgnd
-str(bckgnd)
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
-                  function(x) gadm(country=x,level=0,resolution=2,#
-                  path=getwd()))) %>%#
-          st_as_sf(crs = st_crs('EPSG:4326'))#
-mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:4326'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
-                   crs=st_crs('EPSG:4326'))
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey')#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=0),#
-                    ylim=plims(sismos$Latitud,p=0))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=0),#
-                    ylim=plims(sismos$Latitud,p=0))#
-magmap1
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
-                  function(x) gadm(country=x,level=0,resolution=2,#
-                  path=getwd()))) %>%#
-          st_as_sf(crs = st_crs('EPSG:6365'))#
-mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:6365'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
-                   crs=st_crs('EPSG:6365'))#
+}#
 #
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=0),#
-                    ylim=plims(sismos$Latitud,p=0))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=0.3,alpha=0.2,color='black') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,size=Magnitud,alpha=0.2,color=Profundidad) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=Magnitud,color=Profundidad)) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
-length(sismos[,1])
-sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),] %>%#
-          filter(Magnitud != 'no calculable')
-length(sismos[,1])
-sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
-              strptime('%Y-%m-%d %H:%M:%S') %>%#
-              as.POSIXct(tz = 'UTC')
-bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
-bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
-                  function(x) gadm(country=x,level=0,resolution=2,#
-                  path=getwd()))) %>%#
-          st_as_sf(crs = st_crs('EPSG:6365'))#
-mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
-          st_as_sf(crs = st_crs('EPSG:6365'))#
-ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
-                   crs=st_crs('EPSG:6365'))#
-#
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=Magnitud,color=Profundidad)) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
-magsize <- function(mag) {#
-	# for plot#
-	# mag - list of magnitudes#
-	if (mag <= 2) {#
-		return (1)#
-	}#
-	else if (mag <= 4) {#
-		return (2)#
-	}#
-	else if (mag <= 6) {#
-		return (3)#
-	}#
-	else {#
-		return (4)#
-	}#
-}
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
-magsize <- function(x) {#
-	# for plot#
-	# x - list of magnitudes#
-	mags = 1:length(x)#
-	for (i in 1:length(x)) {#
-		mag = x[i]#
-		if (mag <= 2) {#
-			mags[i] = 1#
-		}#
-		else if (mag <= 4) {#
-			mags[i] = 2#
-		}#
-		else if (mag <= 6) {#
-			mags[i] = 3#
-		}#
-		else {#
-			mags[i] = 4#
-		}		#
-	}#
-	return (mags)#
-}
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
-magmap1
 magsize <- function(x) {#
 	# for plot#
 	# x - list of magnitudes#
@@ -705,60 +471,45 @@ magsize <- function(x) {#
 	}#
 	return (mags)#
 }
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),] %>%#
+          filter(Magnitud != 'no calculable')#
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
+              strptime('%Y-%m-%d %H:%M:%S') %>%#
+              as.POSIXct(tz = 'UTC')
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+ev_pts <- st_as_sf(sismos, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:6365'))
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
            geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+                   aes(color=Profundidad)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
            geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+                   aes(color=Magnitud)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
-           scale_colour_gradientn(colors='viridis')#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
+sismos$Magnitud <- as.numeric(sismos$Magnitud)
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
            geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           scale_colour_gradientn(colors='viridis') +#
+                   aes(color=Magnitud)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           scale_colour_gradient(colors='viridis') +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           scale_colour_gradient() +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
-magmap1
-magmap1 <- ggplot() +#
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
-           geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
-magmap1
-rlang::last_trace()
-rlang::last_trace(drop=FALSE)
 # Reemplazar path por el preferido#
 setwd('/Users/roberto/Documents/stats-final-project')#
 #
@@ -814,6 +565,7 @@ sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(294776:294782),] %>%#
 sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
               strptime('%Y-%m-%d %H:%M:%S') %>%#
               as.POSIXct(tz = 'UTC')#
+sismos$Magnitud <- as.numeric(sismos$Magnitud)#
 #
 ######### ######### ######### ######### ######### ######### ######### ##########
 #
@@ -831,34 +583,205 @@ magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
            geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +#
+                   aes(color=Magnitud)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1)) +#
-magmap1
-magmap1 <- ggplot() +
-geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
-geom_sf(data=mexico,fill='white',color='grey') +
-geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=magsize(Magnitud),color=Profundidad)) +
-coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
-                    ylim=plims(sismos$Latitud,p=-0.1))
+                    ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
            geom_sf(data=ev_pts,alpha=0.2,#
-                   aes(size=1,color=Profundidad)) +#
+                   aes(color=Magnitud)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
                     ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
-           geom_sf(data=ev_pts,alpha=0.2,size=0.1#
+           geom_sf(data=ev_pts,alpha=0.2,#
                    aes(color=Profundidad)) +#
            coord_sf(xlim=plims(sismos$Longitud,p=-0.1),#
                     ylim=plims(sismos$Latitud,p=-0.1)) #
 magmap1
+sismitos <- sismos[sismos$Magnitud<1.2,]
+sismitos
+sismitos <- sismos[sismos$Magnitud<1.0,]
+sismitos
+cosa <- read_csv('catalogo_sismos.csv',skip=4)
+cosa <- read.csv('catalogo_sismos.csv',skip=4)
+tail(cosa,n=10L)
+sismos <- read.csv("catalogo_sismos.csv",skip=4)[-(304906:304912),] %>%#
+          filter(Magnitud != 'no calculable')#
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>% #
+              strptime('%Y-%m-%d %H:%M:%S') %>%#
+              as.POSIXct(tz = 'UTC')#
+sismos$Magnitud <- as.numeric(sismos$Magnitud)
+head(sismos)
+20 * 10 ^ 2
+20 * 10 ^ 3
+20 * 10 ^ ((6-6)/2)
+20 * 10 ^ ((5-6)/2)
+20 * 10 ^ ((4-6)/2)
+20 * 10 ^ ((3-6)/2)
+20 * 10 ^ ((2-6)/2)
+20 * 10 ^ ((1-6)/2)
+20 * 10 ^ ((8-6)/2)
+20 * 10 ^ (((1:4)-6)/2)
+basemag <- seq(min(sismos$Magnitud),max(sismos$Magnitud),0.1)#
+freq_events <- 1:length(basemag)#
+for (i in 1:length(basemag)){#
+	cutmag = basemag[i]#
+	freq_events[i] = length(sismos$Magnitud[sismos$Magnitud>cutmag])#
+}
+plot(basemag,freq_events)
+plot(basemag,freq_events,log='y')
+?round
+magfreqs <- function(m,mbin=0.1) {#
+	# Generates data.frame of number of events against magnitude#
+	# Input:#
+	# m - list of magnitudes#
+	# mbin - binning width (difference)#
+	# Output:#
+	# df$magnitude - #
+	# df$amount - #
+	mags <- seq(round(min(mags),digits=1),#
+	            round(max(mags),digits=1),#
+	            mbin)#
+	amt <- 1:length(mags)#
+	for (i in 1:length(mags)){#
+		cutmag = mags[i]#
+		amt[i] = length(m[m>cutmag])#
+	}#
+	df <- data.frame(magnitude=mags,amount=amt)#
+	return (df)#
+}
+freqs <- magfreqs(sismos$Magnitud)
+magfreqs <- function(m,mbin=0.1) {#
+	# Generates data.frame of number of events against magnitude#
+	# Input:#
+	# m - list of magnitudes#
+	# mbin - binning width (difference)#
+	# Output:#
+	# df$magnitude - #
+	# df$amount - #
+	mags = seq(round(min(mags),digits=1), round(max(mags),digits=1), mbin)#
+	amt = 1:length(mags)#
+	for (i in 1:length(mags)){#
+		cutmag = mags[i]#
+		amt[i] = length(m[m>cutmag])#
+	}#
+	df <- data.frame(magnitude=mags,amount=amt)#
+	return (df)#
+}
+freqs <- magfreqs(sismos$Magnitud)
+magfreqs <- function(m,mbin=0.1) {#
+	# Generates data.frame of number of events against magnitude#
+	# Input:#
+	# m - list of magnitudes#
+	# mbin - binning width (difference)#
+	# Output:#
+	# df$magnitude - #
+	# df$amount - #
+	mags = seq(round(min(m),digits=1), round(max(m),digits=1), mbin)#
+	amt = 1:length(mags)#
+	for (i in 1:length(mags)){#
+		cutmag = mags[i]#
+		amt[i] = length(m[m>cutmag])#
+	}#
+	df <- data.frame(magnitude=mags,amount=amt)#
+	return (df)#
+}
+freqs <- magfreqs(sismos$Magnitud)
+str(freqs)
+plot(freqs,log='y')
+magfreqs <- function(m,mbin=0.1) {#
+	# Generates data.frame of number of events against magnitude#
+	# Input:#
+	# m - list of magnitudes#
+	# mbin - binning width (difference)#
+	# Output:#
+	# df$magnitude - #
+	# df$amount - #
+	mags = seq(round(min(m),digits=1), round(max(m),digits=1), mbin)#
+	amt = 1:length(mags)#
+	for (i in 1:length(mags)){#
+		cutmag = mags[i]#
+		amt[i] = length(m[m>=cutmag])#
+	}#
+	df <- data.frame(magnitude=mags,amount=amt)#
+	return (df)#
+}
+freqs <- magfreqs(sismos$Magnitud)
+plot(freqs,log='y')
+magfreqs <- function(m,mbin=0.1) {#
+	# Generates data.frame of number of events against magnitude#
+	# Input:#
+	# m - list of magnitudes#
+	# mbin - binning width (difference)#
+	# Output:#
+	# df$magnitude - #
+	# df$amount - #
+	mags = seq(round(min(m),digits=1), round(max(m),digits=1), mbin)#
+	amt = 1:length(mags)#
+	for (i in 1:length(mags)){#
+		cutmag = mags[i]#
+		amt[i] = length(m[m>cutmag])#
+	}#
+	df <- data.frame(magnitude=mags,amount=amt)#
+	return (df)#
+}
+freqs <- magfreqs(sismos$Magnitud)
+plot(freqs,log='y')
+magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +#
+                geom_point() +#
+                scale_y_continous(trans='log10')
+magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +#
+                geom_point() +#
+                scale_y_continuous(trans='log10')
+magfreqplot1
+magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +#
+                geom_point() +#
+                scale_y_continuous(trans='log10',#
+                    breaks=trans_breaks('log10', function(x) 10^x),#
+                    labels=trans_format('log10', math_format(2^.x)))
+library(geodata)#
+library(ggplot2)#
+library(sf)#
+library(dplyr)#
+library(scales)
+freqs <- magfreqs(sismos$Magnitud)#
+magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +#
+                geom_point() +#
+                scale_y_continuous(trans='log10',#
+                    breaks=trans_breaks('log10', function(x) 10^x),#
+                    labels=trans_format('log10', math_format(2^.x)))
+magfreqplot1
+magfreqplot1 <- ggplot(freqs,aes(x=magnitude,y=amount)) +#
+                geom_point() +#
+                scale_y_continuous(trans='log10',#
+                    breaks=trans_breaks('log10', function(x) 10^x),#
+                    labels=trans_format('log10', math_format(10^.x)))#
+magfreqplot1
+10>=9
+9>=9
+8.9>=9
+length(sismos_mc_hi$Magnitud)
+# First step: taking into account completeness of catalog#
+mc_bool = sismos$Magnitud >= 3.1#
+sismos_mc_hi <- sismos[mc_bool]   # complete for older data
+# First step: taking into account completeness of catalog#
+mc_bool = sismos$Magnitud >= 3.1#
+sismos_mc_hi <- sismos[mc_bool,]   # complete for older data
+length(sismos_mc_hi$Magnitud)
+bckgnd_countries = c('US','GT','BZ','SV','HN','NI','CR','PA')#
+bckgnd <- do.call('rbind',lapply(bckgnd_countries,#
+                  function(x) gadm(country=x,level=0,resolution=2,#
+                  path=getwd()))) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+mexico <- gadm(country='MX',level=1,resolution=2,path=getwd()) %>%#
+          st_as_sf(crs = st_crs('EPSG:6365'))#
+ev_pts <- st_as_sf(sismos_mc_hi, coords=c('Longitud','Latitud'), #
+                   crs=st_crs('EPSG:6365'))
 magmap1 <- ggplot() +#
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +#
            geom_sf(data=mexico,fill='white',color='grey') +#
