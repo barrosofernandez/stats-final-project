@@ -12,14 +12,15 @@
 # ######################################### #
 
 # Reemplazar path por el preferido
-# setwd("/Users/roberto/Documents/stats-final-project")
-setwd("/Users/robby/Documents/stats-final-project")
+setwd("/Users/roberto/Documents/stats-final-project")
+# setwd("/Users/robby/Documents/stats-final-project")
 
 library(geodata)
 library(ggplot2)
 library(sf)
 library(dplyr)
 library(scales)
+library(cluster)  # silhouette
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
@@ -249,6 +250,7 @@ deep <- sismos_bckgd[!bool_depth, c("Longitud", "Latitud", "Magnitud",
 
 # For tests
 n_clust <- 2:20
+dists_shallow <- dist(shallow[, c("X", "Y", "Z")])
 
 # For elbow test
 elbow_test <- seq(1, length(n_clust), 1)
@@ -266,6 +268,7 @@ B <- 10
 
 for (ii in seq.int(1, length(n_clust), 1)) {
 	k <- n_clust[ii]
+	print(k)
 	clust <- kmeans(shallow[, c("X", "Y", "Z")], k, nstart = 25)
 	
     # Elbow test
@@ -285,6 +288,7 @@ for (ii in seq.int(1, length(n_clust), 1)) {
     pooled_sum <- sum(pooled)  # W_k of our data cluster
     # Gap test: for the random cluster
     # Has to be repeated B times
+    # Could've used clusGap from 'cluster', but this is funnier
     pooled_random <- seq(1, B, 1)
     for (kk in seq(1, B, 1)) {
         x_random <- runif(n = length(shallow$X),
@@ -313,8 +317,10 @@ for (ii in seq.int(1, length(n_clust), 1)) {
     }
     gap_k <- (1 / B) * sum(log10(pooled_random)) - log10(pooled_sum)
     gap_test[ii] <- gap_k
-
-
+    # Silhouette test: from the 'cluster' library
+    sil <- silhouette(clust$cluster, dists_shallow)
+    silhouette_test[ii] <- mean(sil[, 3])  # mean silhouette width
+    rm(sil)
 }
 
 
