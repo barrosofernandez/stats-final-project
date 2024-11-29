@@ -12,8 +12,8 @@
 # ######################################### #
 
 # Reemplazar path por el preferido
-setwd("/Users/roberto/Documents/stats-final-project")
-# setwd("/Users/robby/Documents/stats-final-project")
+# setwd("/Users/roberto/Documents/stats-final-project")
+setwd("/Users/robby/Documents/stats-final-project")
 
 library(geodata)
 library(ggplot2)
@@ -21,6 +21,8 @@ library(sf)
 library(dplyr)
 library(scales)
 library(cluster)  # silhouette
+library(ggpubr)
+library(dbscan)
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
@@ -217,12 +219,14 @@ sismos_mc$aftershocks <- aftershocks
 sismos_clust <- sismos_mc[sismos_mc$aftershocks == 1, ]
 sismos_bckgd <- sismos_mc[sismos_mc$aftershocks == 0, ]
 
+write.csv(sismos_bckgd, file = "background_seismicity.csv")
+
 ######### ######### ######### ######### ######### ######### ######### #########
 
 # Now, the statistical analysis part
 
 # ######################################### #
-#             k-means clustering            #
+#          k-means clustering tests         #
 # ######################################### #
 
 # Splitting catalog into two parts, one for more superficial events,
@@ -257,6 +261,7 @@ elbow_test <- seq(1, length(n_clust), 1)
 
 # For gap test
 gap_test <- seq(1, length(n_clust), 1)
+gap_sk   <- seq(1, length(n_clust), 1)
 
 # For silhouette test
 silhouette_test <- seq(1, length(n_clust), 1)
@@ -264,7 +269,7 @@ silhouette_test <- seq(1, length(n_clust), 1)
 
 W_k_clust <- seq(1, length(n_clust), 1)
 W_k_random <- seq(1, length(n_clust), 1)
-B <- 10
+B <- 256
 
 for (ii in seq.int(1, length(n_clust), 1)) {
 	k <- n_clust[ii]
@@ -315,26 +320,85 @@ for (ii in seq.int(1, length(n_clust), 1)) {
         pooled_random[kk] <- pooled_random_bit_sum
         }
     }
-    gap_k <- (1 / B) * sum(log10(pooled_random)) - log10(pooled_sum)
+    en_Wk <- (1 / B) * sum(log10(pooled_random))
+    sd_k <- sqrt((1 / B) * sum((log10(pooled_random) - en_Wk)^2))
+    s_k <- sd_k * sqrt(1 + (1 / B))
+    gap_k <- en_Wk - log10(pooled_sum)
     gap_test[ii] <- gap_k
+    gap_sk[ii] <- s_k
     # Silhouette test: from the 'cluster' library
     sil <- silhouette(clust$cluster, dists_shallow)
     silhouette_test[ii] <- mean(sil[, 3])  # mean silhouette width
     rm(sil)
 }
 
+clust_tests <- data.frame(k = n_clust, elbow = elbow_test, gap = gap_test,
+                          sk = gap_sk, silhouette = silhouette_test)
 
-for (i in seq.int(1, length(n_clust), 1)) {
-	n <- n_clust[i]
-	clust <- kmeans(shallow[, c("X", "Y", "Z")], n, nstart = 25)
-}
+write.csv(clust_tests, file = "cluster_tests_per_k.csv")
 
+######### ######### ######### ######### ######### ######### ######### #########
 
+# ######################################### #
+#             k-means clustering            #
+# ######################################### #
 
-shallow_kmeans <- kmeans(
-	shallow[, c("X", "Y", "Z")], 10, nstart = 20
-)
-plot(shallow[, c("Longitud", "Latitud")], col = shallow_kmeans$cluster)
+# Actually computing our clusters of interest
+
+clust_tests <- read.csv("cluster_tests_per_k.csv")
+sismos_bckgd <- read.csv("background_seismicity.csv")
+
+cutoff_depth <- 40
+
+bool_depth <- sismos_bckgd$Profundidad <= cutoff_depth
+
+shallow <- sismos_bckgd[bool_depth, c("Longitud", "Latitud", "Magnitud",
+                                      "X", "Y", "Z")]
+deep <- sismos_bckgd[!bool_depth, c("Longitud", "Latitud", "Magnitud",
+                                    "X", "Y", "Z")]
+
+# I calculated stuff using the base-10 logarithm, but I should've
+# used the natural logarithm instead. Luckily, due to the nature
+# of logarithms, this is a quite easy fix
+
+clust_tests$gap <- clust_tests$gap * log(10)
+clust_tests$sk <- clust_tests$sk * log(10)
+
+# Shallow only
+elbow_plot <- ggplot(clust_tests, aes(x = k, y = elbow)) +
+    geom_line() +
+    geom_point() +
+    ggtitle('Prueba de codo') +
+    xlab('N. de grupos') +
+    ylab('TWCSS')
+
+gap_plot <- ggplot(clust_tests, aes(x = k, y = gap)) +
+    geom_line() +
+    geom_point() +
+    geom_errorbar(aes(ymin = gap - sk, ymax = gap + sk), 
+                  width = .2) +
+    ggtitle('Prueba de hueco') +
+    xlab('N. de grupos') +
+    ylab('Estadístico gap')
+
+sil_plot <- ggplot(clust_tests, aes(x = k, y = silhouette)) +
+    geom_line() +
+    geom_point() +
+    ggtitle('Prueba de silueta') +
+    xlab('N. de grupos') +
+    ylab('Silueta promedio')
+
+ggarrange(elbow_plot, gap_plot, sil_plot, ncol = 3, nrow = 1,
+          labels = "AUTO", font.label = list(size = 12, face = "bold",
+                                             color = "red")) %>%
+    ggexport(filename = 'elbow_gap_sil.png', width = 3250, height = 2000,
+             res = 500, pointsize = 10)
+
+# k va a ser igual a 13
+
+clust <- kmeans(shallow[, c("X", "Y", "Z")], 13, iter.max = 20, nstart = 25)
+clust_15 <- kmeans(shallow[, c("X", "Y", "Z")], 15, iter.max = 20, nstart = 25)
+clust_30 <- kmeans(shallow[, c("X", "Y", "Z")], 30, iter.max = 20, nstart = 25)
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
@@ -345,7 +409,7 @@ bckgnd <- do.call("rbind", lapply(bckgnd_countries,
     st_as_sf(crs = st_crs("EPSG:6365"))
 mexico <- gadm(country = "MX", level = 1, resolution = 2, path = getwd()) %>%
     st_as_sf(crs = st_crs("EPSG:6365"))
-ev_pts <- st_as_sf(sismos_bckgd, coords = c("Longitud", "Latitud"),
+ev_pts <- st_as_sf(shallow, coords = c("Longitud", "Latitud"),
                    crs = st_crs("EPSG:6365"))
 
 ######### ######### ######### ######### ######### ######### ######### #########
@@ -358,8 +422,8 @@ magmap1 <- ggplot() +
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
            geom_sf(data=mexico,fill='white',color='grey') +
            geom_sf(data=ev_pts,alpha=0.2,
-                   aes(color=Profundidad)) +
-           coord_sf(xlim=plims(sismos$Longitud,p=-0.1),
-                    ylim=plims(sismos$Latitud,p=-0.1))
+                   aes(color=as.factor(clust_30$cluster))) +
+           coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                    ylim=plims(sismos_bckgd$Latitud,p=-0.1))
 magmap1
 # No ejecutar esto a menos que esté bien arreglado
