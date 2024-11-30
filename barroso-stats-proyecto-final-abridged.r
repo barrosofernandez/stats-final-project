@@ -168,9 +168,14 @@ ggarrange(elbow_plot, gap_plot, sil_plot, ncol = 3, nrow = 1,
     ggexport(filename = 'elbow_gap_sil.png', width = 3250, height = 2000,
              res = 500, pointsize = 10)
 
-# k va a ser igual a 13
+# El k más pequeño para el cual gap(k) >= gap(k+1) - sk(k+1) es k=9
+# Para siluetas, k=2,6,10,12
 
-clust_13 <- kmeans(shallow[, c("X", "Y", "Z")], 13, iter.max = 20, nstart = 25)
+clust_02 <- kmeans(shallow[, c("X", "Y", "Z")],  2, iter.max = 20, nstart = 25)
+clust_06 <- kmeans(shallow[, c("X", "Y", "Z")],  6, iter.max = 20, nstart = 25)
+clust_09 <- kmeans(shallow[, c("X", "Y", "Z")],  9, iter.max = 20, nstart = 25)
+clust_10 <- kmeans(shallow[, c("X", "Y", "Z")], 10, iter.max = 20, nstart = 25)
+clust_12 <- kmeans(shallow[, c("X", "Y", "Z")], 12, iter.max = 20, nstart = 25)
 clust_15 <- kmeans(shallow[, c("X", "Y", "Z")], 15, iter.max = 20, nstart = 25)
 
 ######### ######### ######### ######### ######### ######### ######### #########
@@ -193,7 +198,7 @@ magmap1 <- ggplot() +
            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
            geom_sf(data=mexico,fill='white',color='grey') +
            geom_sf(data=ev_pts,alpha=0.2,
-                   aes(color=as.factor(clust_13$cluster))) +
+                   aes(color=as.factor(clust_15$cluster))) +
            coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
                     ylim=plims(sismos_bckgd$Latitud,p=-0.1))
 magmap1
