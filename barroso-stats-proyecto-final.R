@@ -12,8 +12,8 @@
 # ######################################### #
 
 # Reemplazar path por el preferido
-# setwd("/Users/roberto/Documents/stats-final-project")
-setwd("/Users/robby/Documents/stats-final-project")
+setwd("/Users/roberto/Documents/stats-final-project")
+# setwd("/Users/robby/Documents/stats-final-project")
 
 library(geodata)
 library(ggplot2)
@@ -177,7 +177,7 @@ gk_tdy <- spline(x = gk$m, y = gk$t, method = "natural",
 # 0 if not an aftershock, 1 if yes
 aftershocks <- rep(0,sismos_mc_len)
 for (ii in 1:sismos_mc_len) {
-    if (ii %% 5000 == 0){
+    if (ii %% 10000 == 0){
         print(ii)
     }
     if (ii == sismos_mc_len){
@@ -243,6 +243,8 @@ write.csv(sismos_bckgd, file = "background_seismicity.csv")
 
 # Magnitude is a function of fault size anyway...
 
+sismos_bckgd <- read.csv("background_seismicity.csv")
+
 cutoff_depth <- 40
 
 bool_depth <- sismos_bckgd$Profundidad <= cutoff_depth
@@ -262,18 +264,14 @@ elbow_test <- seq(1, length(n_clust), 1)
 # For gap test
 gap_test <- seq(1, length(n_clust), 1)
 gap_sk   <- seq(1, length(n_clust), 1)
+B <- 100
 
 # For silhouette test
 silhouette_test <- seq(1, length(n_clust), 1)
 
-
-W_k_clust <- seq(1, length(n_clust), 1)
-W_k_random <- seq(1, length(n_clust), 1)
-B <- 256
-
 for (ii in seq.int(1, length(n_clust), 1)) {
 	k <- n_clust[ii]
-	print(k)
+	print(paste("Current k:", k))
 	clust <- kmeans(shallow[, c("X", "Y", "Z")], k, nstart = 25)
 	
     # Elbow test
@@ -291,6 +289,7 @@ for (ii in seq.int(1, length(n_clust), 1)) {
         pooled[jj] <- clust_dist_sum[jj] / (2 * clust$size[jj])
     }
     pooled_sum <- sum(pooled)  # W_k of our data cluster
+    rm(clust_dist)
     # Gap test: for the random cluster
     # Has to be repeated B times
     # Could've used clusGap from 'cluster', but this is funnier
@@ -318,7 +317,10 @@ for (ii in seq.int(1, length(n_clust), 1)) {
                                      (2 * clust_random$size[ll])
         pooled_random_bit_sum <- sum(pooled_random_bit)  # W_kb of random clus
         pooled_random[kk] <- pooled_random_bit_sum
+        rm(clust_random_dist)
         }
+        rm(clust_random)
+        print(paste("k:", k, "Montecarlo:", kk))
     }
     en_Wk <- (1 / B) * sum(log10(pooled_random))
     sd_k <- sqrt((1 / B) * sum((log10(pooled_random) - en_Wk)^2))
@@ -329,6 +331,7 @@ for (ii in seq.int(1, length(n_clust), 1)) {
     # Silhouette test: from the 'cluster' library
     sil <- silhouette(clust$cluster, dists_shallow)
     silhouette_test[ii] <- mean(sil[, 3])  # mean silhouette width
+    rm(clust)
     rm(sil)
 }
 
