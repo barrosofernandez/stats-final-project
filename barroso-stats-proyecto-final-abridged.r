@@ -113,6 +113,29 @@ timediff <- function(date1,date2) {
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
+# Loading the catalog
+sismos <- read.csv("catalogo_sismos.csv", skip = 4)[-(304906:304912), ] %>%
+    filter(Magnitud != "no calculable")
+sismos$utc <- paste(sismos$Fecha.UTC,sismos$Hora.UTC) %>%
+    strptime("%Y-%m-%d %H:%M:%S") %>%
+    as.POSIXct(tz = "UTC")
+sismos$Magnitud <- as.numeric(sismos$Magnitud)
+sismo_coords <- sph_to_rct(
+    sismos$Latitud, sismos$Longitud, sismos$Profundidad
+)
+sismos$X <- sismo_coords$X
+sismos$Y <- sismo_coords$Y
+sismos$Z <- sismo_coords$Z
+
+# relative time to first event in catalog, in days
+time <- 1:length(sismos$X)
+for (i in 1:length(sismos$X)) {
+    date1 = sismos$utc[1]
+    date2 = sismos$utc[i]
+    time[i] <- timediff(date1, date2)
+}
+sismos$time <- time
+
 # ######################################### #
 #             k-means clustering            #
 # ######################################### #
@@ -127,9 +150,9 @@ cutoff_depth <- 40
 bool_depth <- sismos_bckgd$Profundidad <= cutoff_depth
 
 shallow <- sismos_bckgd[bool_depth, c("Longitud", "Latitud", "Magnitud",
-                                      "X", "Y", "Z")]
+                                      "Profundidad","X", "Y", "Z")]
 deep <- sismos_bckgd[!bool_depth, c("Longitud", "Latitud", "Magnitud",
-                                    "X", "Y", "Z")]
+                                    "Profundidad","X", "Y", "Z")]
 
 # I calculated stuff using the base-10 logarithm, but I should've
 # used the natural logarithm instead. Luckily, due to the nature
@@ -140,43 +163,55 @@ clust_tests$sk <- clust_tests$sk * log(10)
 
 # Shallow only
 elbow_plot <- ggplot(clust_tests, aes(x = k, y = elbow)) +
-    geom_line() +
-    geom_point() +
-    ggtitle('Prueba de codo') +
-    xlab('N. de grupos') +
-    ylab('TWCSS')
+    geom_vline(xintercept = 10, linewidth = 2, alpha = 0.2, color = 'blue') +
+    geom_line(linewidth = 0.3) +
+    geom_point(size = 0.5) +
+    ggtitle("Prueba de codo") +
+    xlab("N. de grupos") +
+    ylab("TWCSS") +
+	theme_classic()
 
 gap_plot <- ggplot(clust_tests, aes(x = k, y = gap)) +
-    geom_line() +
-    geom_point() +
+    geom_vline(xintercept = 10, linewidth = 2, alpha = 0.2, color = 'blue') +
+    geom_line(linewidth = 0.3) +
+    geom_point(size = 0.5) +
     geom_errorbar(aes(ymin = gap - sk, ymax = gap + sk), 
-                  width = .2) +
+                  width = .5, ) +
     ggtitle('Prueba de hueco') +
     xlab('N. de grupos') +
-    ylab('Estadístico gap')
+    ylab('Estadístico gap') +
+	theme_classic()
 
 sil_plot <- ggplot(clust_tests, aes(x = k, y = silhouette)) +
-    geom_line() +
-    geom_point() +
+    geom_vline(xintercept = 10, linewidth = 2, alpha = 0.2, color = 'blue') +
+    geom_line(linewidth = 0.3) +
+    geom_point(size = 0.5) +
     ggtitle('Prueba de silueta') +
     xlab('N. de grupos') +
-    ylab('Silueta promedio')
+    ylab('Anchura de silueta promedio') +
+	theme_classic()
 
 ggarrange(elbow_plot, gap_plot, sil_plot, ncol = 3, nrow = 1,
           labels = "AUTO", font.label = list(size = 12, face = "bold",
                                              color = "red")) %>%
-    ggexport(filename = 'elbow_gap_sil.png', width = 3250, height = 2000,
+    ggexport(filename = 'elbow_gap_sil.png', width = 3250, height = 1250,
              res = 500, pointsize = 10)
 
 # El k más pequeño para el cual gap(k) >= gap(k+1) - sk(k+1) es k=9
-# Para siluetas, k=2,6,10,12
+# Sin embargo, k=10 también cumple con la condición
+# Para siluetas, el valor máximo es para k=2, donde los otros picos se dan
+# para k=6 y k=10
+# Por ende, se escoge k=10
 
-clust_02 <- kmeans(shallow[, c("X", "Y", "Z")],  2, iter.max = 20, nstart = 25)
-clust_06 <- kmeans(shallow[, c("X", "Y", "Z")],  6, iter.max = 20, nstart = 25)
-clust_09 <- kmeans(shallow[, c("X", "Y", "Z")],  9, iter.max = 20, nstart = 25)
 clust_10 <- kmeans(shallow[, c("X", "Y", "Z")], 10, iter.max = 20, nstart = 25)
-clust_12 <- kmeans(shallow[, c("X", "Y", "Z")], 12, iter.max = 20, nstart = 25)
-clust_15 <- kmeans(shallow[, c("X", "Y", "Z")], 15, iter.max = 20, nstart = 25)
+
+######### ######### ######### ######### ######### ######### ######### #########
+
+# ######################################### #
+#             Obtaining b-values            #
+# ######################################### #
+
+
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
@@ -187,19 +222,60 @@ bckgnd <- do.call("rbind", lapply(bckgnd_countries,
     st_as_sf(crs = st_crs("EPSG:6365"))
 mexico <- gadm(country = "MX", level = 1, resolution = 2, path = getwd()) %>%
     st_as_sf(crs = st_crs("EPSG:6365"))
-ev_pts <- st_as_sf(shallow, coords = c("Longitud", "Latitud"),
+ev_pts <- st_as_sf(sismos, coords = c("Longitud", "Latitud"),
+                   crs = st_crs("EPSG:6365"))
+ev_pts_bckgd <- st_as_sf(sismos_bckgd, coords = c("Longitud", "Latitud"),
+                   crs = st_crs("EPSG:6365"))
+ev_pts_shallow <- st_as_sf(shallow, coords = c("Longitud", "Latitud"),
                    crs = st_crs("EPSG:6365"))
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
 
 # No ejecutar esto a menos que esté bien arreglado
-magmap1 <- ggplot() +
-           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
-           geom_sf(data=mexico,fill='white',color='grey') +
-           geom_sf(data=ev_pts,alpha=0.2,
-                   aes(color=as.factor(clust_15$cluster))) +
-           coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
-                    ylim=plims(sismos_bckgd$Latitud,p=-0.1))
-magmap1
+evmap1 <- ggplot() +
+          geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+          geom_sf(data=mexico,fill='white',color='grey') +
+          geom_sf(data=ev_pts,alpha=0.5,pch=16,size=0.05) +
+          coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                   ylim=plims(sismos_bckgd$Latitud,p=-0.1)) +
+		  labs(title = "Catálogo original",
+		       subtitle = paste("n=", length(sismos$X), sep = "")) +
+		  theme_classic()
+
+evmap2 <- ggplot() +
+          geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+          geom_sf(data=mexico,fill='white',color='grey') +
+          geom_sf(data=ev_pts_bckgd,alpha=0.5,pch=16,size=0.05) +
+          coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                   ylim=plims(sismos_bckgd$Latitud,p=-0.1)) +
+		  labs(title = "Sismicidad de fondo",
+		       subtitle = paste("n=", length(sismos_bckgd$X), sep = "")) +
+		  theme_classic()
+
+ggarrange(evmap1, evmap2, ncol = 2, nrow = 1,
+          labels = "AUTO", font.label = list(size = 12, face = "bold",
+                                             color = "red")) %>%
+    ggexport(filename = 'evmaps_pre.png', width = 3250, height = 1625,
+             res = 500, pointsize = 10)
+
+# magmap1 <- ggplot() +
+#            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+#            geom_sf(data=mexico,fill='white',color='grey') +
+#            geom_sf(data=ev_pts,alpha=0.2,
+#                    aes(color=Profundidad)) +
+#            coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+#                     ylim=plims(sismos_bckgd$Latitud,p=-0.1))
+			
+# magmap1
+
+# clustmap1 <- ggplot() +
+#            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+#            geom_sf(data=mexico,fill='white',color='grey') +
+#            geom_sf(data=ev_pts,alpha=0.2,
+#                    aes(color=as.factor(clust_15$cluster))) +
+#            coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+#                     ylim=plims(sismos_bckgd$Latitud,p=-0.1))
+			
+# clustmap1
 # No ejecutar esto a menos que esté bien arreglado
