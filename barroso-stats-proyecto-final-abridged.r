@@ -95,6 +95,22 @@ sph_to_rct <- function(lat,lon,depth,r=6371) {
 	return (df)
 }
 
+rct_to_sph <- function(X, Y, Z,r=6371) {
+	# function to extract geographical coordinates from Cartesian
+	# inputs of this function are outputs of sph_to_rct
+	# and viceversa
+	rho <- sqrt(X^2 + Y^2 + Z^2)
+	theta <- atan(Y / X)
+	phi <- acos(Z / rho)
+
+	lat <- 90 - (phi * 180 / pi)
+	lon <- theta * 180 / pi - 180  # ONLY FOR MEXICO !!!!!
+	depth <- r - rho
+
+	df <- data.frame(lat=lat,lon=lon,depth=depth)
+	return(df)
+}
+
 timediff <- function(date1,date2) {
 	# converts time difference to days
 	# 1 day = 24 hrs = 1440 mins = 86400 secs
@@ -109,6 +125,20 @@ timediff <- function(date1,date2) {
 		delta_val <- delta_val / 24
 	} 
 	return(delta_val)
+}
+
+b_value <- function(mags,amount) {
+	M <- head(mags, -1)
+	F <- head(amount, -1)
+	F_log <- log10(F)
+	model <- lm(F_log~M)
+	smmry <- summary(model)
+	aval <- smmry$coefficients[1, 1]
+	asd <- smmry$coefficients[1, 2]
+	bval <- -smmry$coefficients[2, 1]
+	bsd <- smmry$coefficients[2, 2]
+	results <- list(a.value = aval, a.sd = asd, b.value = bval, b.sd = bsd)
+	return(results)
 }
 
 ######### ######### ######### ######### ######### ######### ######### #########
@@ -169,7 +199,9 @@ elbow_plot <- ggplot(clust_tests, aes(x = k, y = elbow)) +
     ggtitle("Prueba de codo") +
     xlab("N. de grupos") +
     ylab("TWCSS") +
-	theme_classic()
+	theme_classic() +
+	ylim(0,2e+09)
+elbow_plot
 
 gap_plot <- ggplot(clust_tests, aes(x = k, y = gap)) +
     geom_vline(xintercept = 10, linewidth = 2, alpha = 0.2, color = 'blue') +
@@ -205,13 +237,55 @@ ggarrange(elbow_plot, gap_plot, sil_plot, ncol = 3, nrow = 1,
 
 clust_10 <- kmeans(shallow[, c("X", "Y", "Z")], 10, iter.max = 20, nstart = 25)
 
+# Statistics of each cluster because it is necessary
+clust_x <- clust_10$centers[, 1]
+clust_y <- clust_10$centers[, 2]
+clust_z <- clust_10$centers[, 3]
+center_coords <- rct_to_sph(clust_x, clust_y, clust_z)
+
+
+
 ######### ######### ######### ######### ######### ######### ######### #########
 
 # ######################################### #
 #             Obtaining b-values            #
 # ######################################### #
 
+n_events <- clust_10$size
+centroid_lat <- round(center_coords$lat, 3)
+centroid_lon <- round(center_coords$lon, 3)
+mag_min  <- 1:10
+mag_max  <- 1:10
+mag_mean <- 1:10
+a_val <- 1:10
+a_sd <- 1:10
+b_val <- 1:10
+b_sd <- 1:10
+for (ii in 1:10){
+	clust_ref <- shallow[clust_10$cluster == ii, ]
+	mfqs <- magfreqs(clust_ref$Magnitud)
+	m_clust <-mfqs$magnitude
+	f_clust <- mfqs$amount / 36  # normalize to year span of data
+	
+	mag_min[ii] <- min(clust_ref$Magnitud)
+	mag_max[ii] <- max(clust_ref$Magnitud)
+	mag_mean[ii] <- round(mean(clust_ref$Magnitud), 3)
+	# avoiding the non-linear parts of the curve 
+	magbol <- m_clust < 5.2 & m_clust > 3.3 
+	gutricht <- b_value(m_clust[magbol],f_clust[magbol]) 
+	a_val[ii] <- round(gutricht$a.value, 3)
+	a_sd[ii]  <- round(gutricht$a.sd, 3)
+	b_val[ii] <- round(gutricht$b.value, 3)
+	b_sd[ii]  <- round(gutricht$b.sd, 3)
+}
 
+clust_base_df <- data.frame(N = 1:10, Eventos = n_events, Latitud = centroid_lat,
+                            Longitud = centroid_lon, MagMin = mag_min,
+							MagMax = mag_max, MagMean = mag_mean, 
+							a_val = a_val, a_sd = a_sd,
+							b_val = b_val, b_sd = b_sd)
+
+write.csv(clust_base_df, file = "clust_base_df.csv")
 
 ######### ######### ######### ######### ######### ######### ######### #########
 
@@ -227,6 +301,8 @@ ev_pts <- st_as_sf(sismos, coords = c("Longitud", "Latitud"),
 ev_pts_bckgd <- st_as_sf(sismos_bckgd, coords = c("Longitud", "Latitud"),
                    crs = st_crs("EPSG:6365"))
 ev_pts_shallow <- st_as_sf(shallow, coords = c("Longitud", "Latitud"),
+                   crs = st_crs("EPSG:6365"))
+ev_pts_deep <- st_as_sf(deep, coords = c("Longitud", "Latitud"),
                    crs = st_crs("EPSG:6365"))
 
 ######### ######### ######### ######### ######### ######### ######### #########
@@ -253,10 +329,30 @@ evmap2 <- ggplot() +
 		       subtitle = paste("n=", length(sismos_bckgd$X), sep = "")) +
 		  theme_classic()
 
-ggarrange(evmap1, evmap2, ncol = 2, nrow = 1,
+evmap3 <- ggplot() +
+          geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+          geom_sf(data=mexico,fill='white',color='grey') +
+          geom_sf(data=ev_pts_shallow,alpha=0.5,pch=16,size=0.05) +
+          coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                   ylim=plims(sismos_bckgd$Latitud,p=-0.1)) +
+		  labs(title = "Sismicidad superficial",
+		       subtitle = paste("n=", length(shallow$X), sep = "")) +
+		  theme_classic()
+
+evmap4 <- ggplot() +
+          geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+          geom_sf(data=mexico,fill='white',color='grey') +
+          geom_sf(data=ev_pts_deep,alpha=0.5,pch=16,size=0.05) +
+          coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                   ylim=plims(sismos_bckgd$Latitud,p=-0.1)) +
+		  labs(title = "Sismicidad profunda",
+		       subtitle = paste("n=", length(deep$X), sep = "")) +
+		  theme_classic()
+
+ggarrange(evmap1, evmap2, evmap3, evmap4, ncol = 2, nrow = 2,
           labels = "AUTO", font.label = list(size = 12, face = "bold",
                                              color = "red")) %>%
-    ggexport(filename = 'evmaps_pre.png', width = 3250, height = 1625,
+    ggexport(filename = 'evmaps_full.png', width = 3250, height = 2750,
              res = 500, pointsize = 10)
 
 # magmap1 <- ggplot() +
@@ -269,13 +365,39 @@ ggarrange(evmap1, evmap2, ncol = 2, nrow = 1,
 			
 # magmap1
 
-# clustmap1 <- ggplot() +
-#            geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
-#            geom_sf(data=mexico,fill='white',color='grey') +
-#            geom_sf(data=ev_pts,alpha=0.2,
-#                    aes(color=as.factor(clust_15$cluster))) +
-#            coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
-#                     ylim=plims(sismos_bckgd$Latitud,p=-0.1))
+clust_labels <- c("SubGO", "SubCG", "SubJL", "SubCM", "SubOC",
+                  "SubGR", "SMOr", "BCS", "FVTM", "BCN")
+
+clustmap1 <- ggplot() +
+           geom_sf(data=bckgnd,fill='lightgrey',color='grey') +
+           geom_sf(data=mexico,fill='white',color='grey') +
+           geom_sf(data=ev_pts_shallow,pch=16,size=1,
+                   aes(color=as.factor(clust_10$cluster))) +
+		   scale_color_brewer(palette = "Paired") +
+           coord_sf(xlim=plims(sismos_bckgd$Longitud,p=-0.1),
+                    ylim=plims(sismos_bckgd$Latitud,p=-0.1)) +
+		   labs(title = "Agrupación de eventos", color = "Grupo") +
+		   annotate("text", x = clust_base_df$Longitud, 
+		            y = clust_base_df$Latitud, label = clust_labels, 
+					size=3) +
+		   theme_classic() +
+		   xlab(NULL) + ylab(NULL)
+
+ggexport(clustmap1, filename = 'clustmap1.png', width = 3250, height = 2750,
+             res = 500, pointsize = 10)
+
+
+shallow$cluster <- clust_10$cluster
+
+subcm <- shallow[clust_10$cluster == 4 & shallow$Magnitud < 5 & shallow$Magnitud > 3.3, ]
+magscm <- head(magfreqs(subcm$Magnitud), -1)
+
+clustmags <- ggplot(magscm, aes(magnitude, amount)) +
+    geom_point() +
+	scale_y_log10() +
+	geom_smooth(method = lm) +
+	theme_classic()
+clustmags
 			
 # clustmap1
 # No ejecutar esto a menos que esté bien arreglado
